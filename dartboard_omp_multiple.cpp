@@ -33,6 +33,8 @@ int main(int argc, char *argv[]){
 
     if (taskid == numtasks -1 )
         cant = no_of_points - taskid*cant;
+
+    //printf("cant %d\n", cant);
         
     for(i=0; i<cant; i++){
         x= dis(gen);
@@ -46,9 +48,13 @@ int main(int argc, char *argv[]){
             ++inside;
         }
     }
+    //printf("i %d\n", i);
+    //printf("inside %f\n", inside);
     #pragma omp atomic update
     total_inside+= inside;
     }
+
+    //printf("total_inside %f\n", total_inside);
     auto end = std::chrono::system_clock::now();
 
     std::chrono::duration<float,std::ratio<1>> duration = end - start;
