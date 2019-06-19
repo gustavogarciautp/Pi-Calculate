@@ -32,7 +32,9 @@ float compute(int cant){
 #define MASTER 0        /* task ID of master task */
 
 int main (int argc, char *argv[]){
+char *fname;
   int	no_of_points = atoi(argv[1]);        /* average pi value for all iterations */
+  fname = (argc > 2) ? argv[2]: NULL;
   float inside, total_inside=0.0;
   int	taskid,	        /* task ID - also used as seed number */
   	numtasks,       /* number of tasks */
@@ -46,7 +48,7 @@ int main (int argc, char *argv[]){
   MPI_Init(&argc,&argv);
   MPI_Comm_size(MPI_COMM_WORLD,&numtasks);
   MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
-  printf ("MPI task %d has started...\n", taskid);
+ // printf ("MPI task %d has started...\n", taskid);
 
   int cant = no_of_points/numtasks;
   if (taskid == numtasks-1)
@@ -65,11 +67,14 @@ int main (int argc, char *argv[]){
     //printf("total %f\n", total_inside);
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<float,std::ratio<1>> duration = end - start;
-    std::cout << duration.count() << std::endl;
+   // std::cout << duration.count() << std::endl;
     //printf("Total inside for all process %f\n", total_inside);
     float Pi = 4.0 * total_inside/ no_of_points;
-    printf("The value of Pi is estimated to be %.11f using %d points\n", Pi, no_of_points);  
-  }
+   // printf("The value of Pi is estimated to be %.11f using %d points\n", Pi, no_of_points);  
+   FILE* fp=fopen(fname, "a");
+   fprintf(fp, "%g %g\n", duration.count(),Pi);
+   fclose(fp);
+}
   return 0;
 }
 
