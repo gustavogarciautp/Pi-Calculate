@@ -41,9 +41,9 @@ char *fname;
   	rc;             /* return code */
 
   MPI_Status status;
-
-  auto start = std::chrono::system_clock::now();
-
+   double t1, t2,tf;
+ // auto start = std::chrono::system_clock::now();
+   t1=MPI_Wtime();
   /* Obtain number of tasks and task ID */
   MPI_Init(&argc,&argv);
   MPI_Comm_size(MPI_COMM_WORLD,&numtasks);
@@ -65,14 +65,16 @@ char *fname;
   MPI_Finalize();  
   if (taskid== MASTER){
     //printf("total %f\n", total_inside);
-    auto end = std::chrono::system_clock::now();
-    std::chrono::duration<float,std::ratio<1>> duration = end - start;
+   // auto end = std::chrono::system_clock::now();
+    t2=MPI_Wtime();
+    tf=t2-t1;  
+ // std::chrono::duration<float,std::ratio<1>> duration = end - start;
    // std::cout << duration.count() << std::endl;
     //printf("Total inside for all process %f\n", total_inside);
     float Pi = 4.0 * total_inside/ no_of_points;
    // printf("The value of Pi is estimated to be %.11f using %d points\n", Pi, no_of_points);  
    FILE* fp=fopen(fname, "a");
-   fprintf(fp, "%g %g\n", duration.count(),Pi);
+   fprintf(fp, "%g %g\n", tf,Pi);
    fclose(fp);
 }
   return 0;
